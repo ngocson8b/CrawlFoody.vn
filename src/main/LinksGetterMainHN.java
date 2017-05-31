@@ -5,7 +5,7 @@ import foodyCrawler.CrawlerLinksGetter;
 
 public class LinksGetterMainHN {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		
 		// Crawler cho nhà hàng
 		 CrawlerLinksGetter T = null;
@@ -23,8 +23,8 @@ public class LinksGetterMainHN {
                      , Constants.HN_LINK_PATH);
 			 
 			 	T.start();
-		    }
-	      
+			 	T.join();
+		    }	      
 	}
 
 }

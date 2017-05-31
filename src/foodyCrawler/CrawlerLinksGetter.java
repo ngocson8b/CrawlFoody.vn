@@ -40,12 +40,9 @@ public class CrawlerLinksGetter extends Thread {
 	    	  Link link = new Link(threadName);
 	  		  link.getLink(urlFirst, urlLast, pageCount, outputFileUrl);
 	            // Let the thread sleep for a while.
-	            Thread.sleep(5000);
-	         
-	      }catch (InterruptedException e) {
-	    	  logger.info("Thread " +  threadName + " interrupted.");
+	           
 	      }catch(Exception ex){
-	    	  
+	    	  logger.info(ex);
 	      }
 	      
 	      logger.info("Thread " +  threadName + " exiting.");

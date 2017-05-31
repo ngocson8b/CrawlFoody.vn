@@ -37,7 +37,7 @@ public class Link {
 				 Elements links = doc.getElementsByClass(Constants.HTML_SPLIT_CLASS);
 				 
 				 logger.info("[" + catName + "] Page number: " + iCount);
-				 logger.info("[" + catName + "] Number of Items:" + links.size());
+				// logger.info("[" + catName + "] Number of Items:" + links.size());
 				 for (Element link : links) {
 					 link = link.select("a[href]").first();
 					 if(link.attr("href").indexOf("?") == -1) {
@@ -46,7 +46,7 @@ public class Link {
 					 }
 			      }
 				 
-				 Thread.sleep(20000);
+				 Thread.sleep(5000);
 				 
 			 }
 			 

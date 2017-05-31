@@ -24,20 +24,24 @@ public class Constants {
 	
 	public static String[] CAT_LIST = {"nha-hang@84"
 									  ,"sang-trong@7"
-									  ,"buffet@7"
 									  ,"an-vat-via-he@84"
-									  ,"an-chay@7"
-									  ,"cafe@84"
-									  ,"quan-an@84"
-									  ,"bar-pub@20"
-									  ,"quan-nhau@84"
-									  ,"beer-club@6"
-									  ,"tiem-banh@49"
-									  ,"tiec-tan-noi@1"
-									  ,"shop-online@84"
-									  ,"giao-com-van-phong@5"
-									  ,"foodcourt@2"
 									  };
+	public static String[] CAT_LIST_ALL = {"nha-hang@84"
+			  ,"sang-trong@7"
+			  ,"buffet@7"
+			  ,"an-vat-via-he@84"
+			  ,"an-chay@7"
+			  ,"cafe@84"
+			  ,"quan-an@84"
+			  ,"bar-pub@20"
+			  ,"quan-nhau@84"
+			  ,"beer-club@6"
+			  ,"tiem-banh@49"
+			  ,"tiec-tan-noi@1"
+			  ,"shop-online@84"
+			  ,"giao-com-van-phong@5"
+			  ,"foodcourt@2"
+			  };
 	
 	
 	
