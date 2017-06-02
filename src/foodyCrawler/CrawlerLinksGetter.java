@@ -12,15 +12,15 @@ public class CrawlerLinksGetter extends Thread {
 	 private String urlFirst;
 	 private String urlLast;
 	 private int pageCount;
-	 private String outputFileUrl;
+	 public String outputFileUrl;
 	 
 	 private String threadName;
 	 
 	 final static Logger logger = Logger.getLogger(CrawlerLinksGetter.class);
 	 
-	 public CrawlerLinksGetter( String name, String pUrlFirst, String pUrlLast, int pPageCount, String pItemName, String pCode, String pLinkPath) {
-	      urlFirst = pUrlFirst.replace("@item", pItemName).replace("@cat", name);
-	      urlLast = pUrlLast;
+	 public CrawlerLinksGetter( String name, String pUrlFirst, String pUrlLast, int pPageCount, String pItemName, String pCode, String pLinkPath, String pCate) {
+	      urlFirst = pUrlFirst.replace("@item", pItemName).replace("@cat", name).replace("@cate", pCate);
+	      urlLast = pUrlLast.replace("@cate", pCate);
 	      pageCount = pPageCount;
 	      threadName = pItemName;
 	      outputFileUrl = pLinkPath + pCode + "_" + pItemName.toLowerCase() + ".txt";

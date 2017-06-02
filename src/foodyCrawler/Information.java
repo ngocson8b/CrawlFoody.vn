@@ -16,25 +16,41 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import java.io.*;
 
-public class Information {
+import common.Constants;
+import common.Utils;
+import foodyCrawler.CrawlerLinksGetter;
+import java.io.File;
+
+import org.apache.log4j.Logger;
+
+
+public class Information extends Thread {
 	//Delimiter used in CSV file
+	
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
 	private int row = 1;
 	private int page = 1;
 			
 	//CSV file header
-	private static final String FILE_HEADER = "Mã thương hiệu,Mã cửa hàng,Tên cửa hàng,Trạng thái,Mã bưu chính,Tỉnh/Thành phố,Địa chỉ,Tòa nhà,Vĩ độ,Kinh độ,Phạm vi check in,Truy cập,Số điện thoại,FAX,Tên quản lý cửa hàng,Tên quản lý cửa hàng,Ngày nghỉ,Thông tin đỗ xe,Thông tin chỗ ngồi,Phòng của trẻ nhỏ,Địa chỉ email,Điều khoản sử dụng,Chính sách bảo mật,Freeword,SEO từ khóa 1,SEO từ khóa 2,SEO từ khóa 3";
+	private static final String FILE_HEADER = "Mã thương hiệu,Mã cửa hàng,Tên cửa hàng,Trạng thái,Mã bưu chính,Tỉnh/Thành phố,Địa chỉ,Tòa nhà,Vĩ độ,Kinh độ,Phạm vi check in,Truy cập,Số điện thoại,FAX,Tên quản lý cửa hàng,Thời gian hoạt động,Ngày nghỉ,Thông tin đỗ xe,Thông tin chỗ ngồi,Phòng của trẻ nhỏ,Địa chỉ email,Điều khoản sử dụng,Chính sách bảo mật,Freeword,SEO từ khóa 1,SEO từ khóa 2,SEO từ khóa 3";
+	//final static Logger logger = Logger.getLogger(CrawlerLinksGetter.class);
+	public void getInfo(String pLinkPath, String pInfoPath, String pCode, String pItemName) throws IOException, InterruptedException{
+		String fileInputPath = pLinkPath + pCode + "_" + pItemName.toLowerCase() + ".txt" ;
+		System.out.println(fileInputPath);
+        FileInputStream fileReader = new FileInputStream(new File(fileInputPath)); 
+        File infoPath = new File(pInfoPath);
+	      if(!infoPath.exists()){
+	    	  infoPath.mkdirs();
+	      }
+        File fileOutputPath = new File(pInfoPath + pCode + "_" + pItemName.toLowerCase() + "_" + page + ".csv");
+        System.out.println(fileOutputPath);
+		// PrintWriter pw = new PrintWriter(fileOutputPath,"UTF-8");
+		FileWriter pw = new FileWriter(fileOutputPath,true); 
 
-	public void getInfo(String idAdress) throws IOException, InterruptedException{
-		String fileInputPath = "C:/Users/MaiPL/Documents/link.txt";
-        FileInputStream fileReader = new FileInputStream(new File(fileInputPath));        
-        File fileOutputPath = new File("C:/Users/MaiPL/Documents/data1.csv");		
-		PrintWriter pw = new PrintWriter(fileOutputPath,"UTF-8");
-
-		//Write the CSV file header
+//		Write the CSV file header
 		pw.write(FILE_HEADER.toString());
-		//Add a new line separator after the header
+//		Add a new line separator after the header
 		pw.write(NEW_LINE_SEPARATOR.toString());
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(fileReader));
@@ -46,24 +62,26 @@ public class Information {
             		driver.get(link);
             		login(driver);
             		//get data from website
-            		Store store = execData(driver,idAdress, row) ;
+            		Store store = execData(driver, row) ;
             		row++;
-            		//write to file csv
-            		if(row%3==0) {
+            		//write to file csv  
+            		if(row%20==0){
             			page++;
-            			fileOutputPath = new File("C:/Users/MaiPL/Documents/data"+ page + ".csv");
-            			pw = new PrintWriter(fileOutputPath,"UTF-8");
-            			//Write the CSV file header
+            			fileOutputPath = new File(pInfoPath + pCode + "_" + pItemName.toLowerCase() + "_" + page + ".csv");
+            			pw = new FileWriter(fileOutputPath,true); 
+
+//            			Write the CSV file header
             			pw.write(FILE_HEADER.toString());
-            			//Add a new line separator after the header
+//            			Add a new line separator after the header
             			pw.write(NEW_LINE_SEPARATOR.toString());
+            			
             		}
-            		pw.write(writeToBuilder(store).toString());            		
-            		//close FirefoxDriver
+            		pw.write(writeToBuilder(store).toString());           		
+            		pw.flush();
             		driver.close();
+            		Thread.sleep(5000);
             }
         }
-//		fileWriter.flush();
 		pw.close();
 		
 	}
@@ -83,7 +101,7 @@ public class Information {
 		 Thread.sleep(2000);	
 	}
 	
-	public Store execData(WebDriver driver, String idAdress, int row) throws InterruptedException{
+	public Store execData(WebDriver driver, int row) throws InterruptedException{
 		Store store = new Store();
 		//main-info-title
  		String title = driver.findElement(By.xpath("//div[@class='main-info-title']//h1")).getText();
@@ -93,6 +111,7 @@ public class Information {
  		//get streetAddress
  		String streetAddress = driver.findElement(By.xpath("//span[@itemprop='streetAddress']")).getText();
  		if(streetAddress == null && streetAddress.isEmpty()) streetAddress = "";
+ 		else streetAddress = streetAddress.replaceAll(",", ";");
  		store.setStore_building(streetAddress);
  		
  		//get addressLocality
@@ -103,7 +122,7 @@ public class Information {
  		//get addressRegion
  		String addressRegion = driver.findElement(By.xpath("//span[@itemprop='addressRegion']")).getText(); 
  		if(addressRegion == null && addressRegion.isEmpty()) addressRegion = "";
- 		store.setStore_prefectures(idAdress);
+ 		store.setStore_prefectures("Đà Nẵng");
  		
  		//get latitude
  		String latitude = driver.findElement(By.xpath("//meta[@itemprop='latitude']")).getText();
@@ -117,13 +136,10 @@ public class Information {
  		
  		//get micro-timesopen
  		String timesopen;
-// 		System.out.println(driver.findElement(By.xpath("//div[@class='micro-timesopen']//span[3]")).getSize());
- 		
  		try{
  			timesopen = driver.findElement(By.xpath("//div[@class='micro-timesopen']//span[3]")).getText();
  			
  		}
-// 			timesopen = driver.findElement(By.xpath("//div[@class='micro-timesopen']//span[3]")).getText();
  		catch (Exception e)
  		{
  		timesopen = driver.findElement(By.xpath("//div[@class='micro-timesopen']//span[2]")).getText();
@@ -133,9 +149,9 @@ public class Information {
  		store.setStore_business_hours(timesopen);
  				
  		//get image
- 		String image = driver.findElement(By.xpath("//div[@class='main-image']//div//a//img")).getAttribute("src");
- 		if(image == null && image.isEmpty()) image = "";
- 		store.setImage(image);           		
+// 		String image = driver.findElement(By.xpath("//div[@class='main-image']//div//a//img")).getAttribute("src");
+// 		if(image == null && image.isEmpty()) image = "";
+// 		store.setImage(image);           		
 
 		
 		//get phone                    		
@@ -144,14 +160,12 @@ public class Information {
 		Thread.sleep(2000);
 		String phone = driver.findElement(By.xpath("//div[@class='microsite-popup-phone-number']//table")).getText();  
 		phone=phone.replaceAll("\\r\\n|\\r|\\n", " - ");
-//		phone=phone.replace(System.getProperty("line.separator"), "");	
-		System.out.println("PHONE: " + phone);
+		//System.out.println("PHONE: " + phone);
 		if(phone == null && phone.isEmpty()) phone = "";
 		store.setStore_phone_no(phone);
 		//set store id
 		store.setStore_code(convertCode(row));
-		System.out.println("DONE: " + row);
-		
+		System.out.print("Done:" + row);
 		return store;
 	}
 	public StringBuilder writeToBuilder(Store store){
@@ -184,17 +198,19 @@ public class Information {
 			sb.append(store.getStore_prefectures());
 		sb.append(COMMA_DELIMITER);
 		//Địa chỉ
+				if(store.getStore_building() == null && store.getStore_building().isEmpty())
+					sb.append("");
+				else
+					sb.append(store.getStore_building());
+				sb.append(";");
 		if(store.getStore_address() == null && store.getStore_address().isEmpty())
 			sb.append("");
 		else
 			sb.append(store.getStore_address());
 		sb.append(COMMA_DELIMITER);
 		//Tòa nhà
-		if(store.getStore_building() == null && store.getStore_building().isEmpty())
-			sb.append("");
-		else
-			sb.append(store.getStore_building());
 		sb.append(COMMA_DELIMITER);
+		
 		//Vĩ độ
 		if(store.getLatitude() == null && store.getLatitude().isEmpty())
 			sb.append("");
@@ -264,6 +280,7 @@ public class Information {
 		//SEO từ khóa 3
 		sb.append("");	
 		sb.append(NEW_LINE_SEPARATOR);
+	
 		return sb;
 	}
 	
@@ -275,5 +292,6 @@ public class Information {
 		else if(num>=10000 && num<100000) return "@0" + num;
 		else return "@" + num;
 	}	
+
 }
 
