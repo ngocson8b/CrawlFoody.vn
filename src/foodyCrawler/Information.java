@@ -29,8 +29,8 @@ public class Information extends Thread {
 	
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
-	private int row = 1;
-	private int page = 1;
+	public int row = 445;
+	public int page = 30;
 			
 	//CSV file header
 	private static final String FILE_HEADER = "Mã thương hiệu,Mã cửa hàng,Tên cửa hàng,Trạng thái,Mã bưu chính,Tỉnh/Thành phố,Địa chỉ,Tòa nhà,Vĩ độ,Kinh độ,Phạm vi check in,Truy cập,Số điện thoại,FAX,Tên quản lý cửa hàng,Thời gian hoạt động,Ngày nghỉ,Thông tin đỗ xe,Thông tin chỗ ngồi,Phòng của trẻ nhỏ,Địa chỉ email,Điều khoản sử dụng,Chính sách bảo mật,Freeword,SEO từ khóa 1,SEO từ khóa 2,SEO từ khóa 3";

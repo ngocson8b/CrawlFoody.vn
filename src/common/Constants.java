@@ -11,7 +11,8 @@ public class Constants {
 	
 	public static String GECKO_DRIVER = "drivers/geckodriver.exe";
 	
-	
+	public static int ROW = 1;
+	public static int PAGE = 1;
 	public static String FOODY_URL = "https://foody.vn"; 
 	public static String HTML_SPLIT_CLASS = "ri-avatar";
 	
@@ -59,16 +60,16 @@ public class Constants {
 			  };
 	
 	public static String[] CAT_LIST_DN = {
-//				"nha-hang@42@1",
-			  "buffet@2@39"
-//			  ,"an-vat-via-he@84@11"
-//			  ,"an-chay@6@56"
-//			  ,"cafe@84@2"
-//			  ,"quan-an@84@3"
-//			  ,"bar-pub@8@4"
-//			  ,"quan-nhau@76@54"
-//			  ,"beer-club@2@43"
-//			  ,"tiem-banh@16@6"
+			//	"nha-hang@42@1",
+//			  "buffet@2@39"
+			  //"an-vat-via-he@84@11"
+			  //"an-chay@6@56"
+			//  ,"cafe@84@2"
+			//  "quan-an@84@3"
+			  //"bar-pub@8@4"
+			  "quan-nhau@76@54"
+			// , "beer-club@2@43"
+			//  ,"tiem-banh@16@6"
 //			  ,"shop-online@23@27"
 									  };
 	
@@ -77,13 +78,13 @@ public class Constants {
 //			  ,"sang-trong@7@12"
 //			  ,"buffet@12@39"
 //			  ,"an-vat-via-he@84@11"
-			  "an-chay@26@56"
-			  ,"cafe@84@2"
-			  ,"quan-an@84@3"
-			  ,"bar-pub@29@4"
-			  ,"quan-nhau@84@54"
-//			  ,"beer-club@9@43"
-//			  ,"tiem-banh@84@6"
+//			  ,"an-chay@26@56"
+//			  ,"cafe@84@2"
+//			  ,"quan-an@84@3"
+//			  ,"bar-pub@29@4"
+			  "quan-nhau@84@54"
+			  ,"beer-club@9@43"
+			  ,"tiem-banh@84@6"
 //			  ,"tiec-tan-noi@4"
 //			  ,"shop-online@84@27"
 //			  ,"giao-com-van-phong@12@28"

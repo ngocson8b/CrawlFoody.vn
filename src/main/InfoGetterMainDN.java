@@ -13,7 +13,9 @@ public class InfoGetterMainDN {
 				
 			for (String cat: Constants.CAT_LIST_DN){
 				String[] arrCat = cat.split("@");
-				T.getInfo(Constants.DN_LINK_PATH, Constants.DN_INFO_PATH, Constants.DN_CODE, arrCat[0]);	 	
+				T.getInfo(Constants.DN_LINK_PATH, Constants.DN_INFO_PATH, Constants.DN_CODE, arrCat[0]);	
+				T.row = Constants.ROW;
+				T.page = Constants.PAGE;
 			}
 			
 	}
