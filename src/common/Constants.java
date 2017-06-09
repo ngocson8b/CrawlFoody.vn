@@ -22,6 +22,7 @@ public class Constants {
 	public static String HN_URL_FIRST = "https://www.foody.vn/ha-noi/@item?ds=@cat&vt=row&st=1&c=@cate&page=";
 	public static String HN_URL_LAST = "&provinceId=218&categoryId=@cate&append=true";
 	public static String HN_CODE = "hn";
+	public static String HN_PREFECTURES = "1";
 	public static String HN_RES_NAME = "Restaurant";
 	
 	//Da nang
@@ -30,6 +31,7 @@ public class Constants {
 	public static String DN_URL_FIRST = "https://www.foody.vn/da-nang/@item?ds=@cat&vt=row&st=1&c=cate&page=";
 	public static String DN_URL_LAST = "&provinceId=219&categoryId=@cate&append=true";
 	public static String DN_CODE = "dn";
+	public static String DN_PREFECTURES = "2";
 	public static String DN_RES_NAME = "Restaurant";
 	
 	//Ho chi minh
@@ -38,14 +40,15 @@ public class Constants {
 	public static String HCM_URL_FIRST = "https://www.foody.vn/ho-chi-minh/@item?ds=@cat&vt=row&st=1&c=@cate&page=";
 	public static String HCM_URL_LAST = "&provinceId=217&categoryId=@cate&append=true";
 	public static String HCM_CODE = "hcm";
+	public static String HCM_PREFECTURES = "3";
 	public static String HCM_RES_NAME = "Restaurant";
 	
 	
 	
 	public static String[] CAT_LIST_HN = {
 //				"nha-hang@84@1",
-			  "sang-trong@7@12"
-//			  ,"buffet@7@39"
+//			  "sang-trong@7@12" -- done
+			  "buffet@7@39"
 //			  ,"an-vat-via-he@84@11"
 //			  ,"an-chay@7@56"
 //			  ,"cafe@84@2"
@@ -65,9 +68,9 @@ public class Constants {
 			  //"an-vat-via-he@84@11"
 			  //"an-chay@6@56"
 			//  ,"cafe@84@2"
-			//  "quan-an@84@3"
+			  "quan-an@84@3"
 			  //"bar-pub@8@4"
-			  "quan-nhau@76@54"
+			 // "quan-nhau@76@54"
 			// , "beer-club@2@43"
 			//  ,"tiem-banh@16@6"
 //			  ,"shop-online@23@27"
@@ -79,12 +82,12 @@ public class Constants {
 //			  ,"buffet@12@39"
 //			  ,"an-vat-via-he@84@11"
 //			  ,"an-chay@26@56"
-//			  ,"cafe@84@2"
-//			  ,"quan-an@84@3"
+			  "cafe@84@2"
+			  ,"quan-an@84@3"
 //			  ,"bar-pub@29@4"
-			  "quan-nhau@84@54"
+//			  "quan-nhau@84@54"
 			  ,"beer-club@9@43"
-			  ,"tiem-banh@84@6"
+//			  ,"tiem-banh@84@6"
 //			  ,"tiec-tan-noi@4"
 //			  ,"shop-online@84@27"
 //			  ,"giao-com-van-phong@12@28"

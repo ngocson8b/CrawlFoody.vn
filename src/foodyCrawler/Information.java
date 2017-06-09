@@ -29,8 +29,8 @@ public class Information extends Thread {
 	
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
-	public int row = 445;
-	public int page = 30;
+	public int row = 1;
+	public int page = 1;
 			
 	//CSV file header
 	private static final String FILE_HEADER = "Mã thương hiệu,Mã cửa hàng,Tên cửa hàng,Trạng thái,Mã bưu chính,Tỉnh/Thành phố,Địa chỉ,Tòa nhà,Vĩ độ,Kinh độ,Phạm vi check in,Truy cập,Số điện thoại,FAX,Tên quản lý cửa hàng,Thời gian hoạt động,Ngày nghỉ,Thông tin đỗ xe,Thông tin chỗ ngồi,Phòng của trẻ nhỏ,Địa chỉ email,Điều khoản sử dụng,Chính sách bảo mật,Freeword,SEO từ khóa 1,SEO từ khóa 2,SEO từ khóa 3";
@@ -65,7 +65,7 @@ public class Information extends Thread {
             		Store store = execData(driver, row) ;
             		row++;
             		//write to file csv  
-            		if(row%20==0){
+            		if(row%50==0){
             			page++;
             			fileOutputPath = new File(pInfoPath + pCode + "_" + pItemName.toLowerCase() + "_" + page + ".csv");
             			pw = new FileWriter(fileOutputPath,true); 
@@ -96,7 +96,8 @@ public class Information extends Thread {
 		  password.sendKeys("123456");
 		  Thread.sleep(1000);
 		  WebElement password2 = driver.findElement(By.id("Password"));
-		  password2.sendKeys("123456");		  
+		  password2.sendKeys("123456");	
+		  Thread.sleep(2000);
 		  driver.findElement(By.id("signin_submit")).click();
 		 Thread.sleep(2000);	
 	}
@@ -122,47 +123,101 @@ public class Information extends Thread {
  		//get addressRegion
  		String addressRegion = driver.findElement(By.xpath("//span[@itemprop='addressRegion']")).getText(); 
  		if(addressRegion == null && addressRegion.isEmpty()) addressRegion = "";
- 		store.setStore_prefectures("Đà Nẵng");
+ 		store.setStore_prefectures(Constants.HN_PREFECTURES);
  		
  		//get latitude
- 		String latitude = driver.findElement(By.xpath("//meta[@itemprop='latitude']")).getText();
+ 		String latitude = driver.findElement(By.xpath("//meta[@itemprop='latitude']")).getAttribute("content");
  		if(latitude == null && latitude.isEmpty()) latitude = "";
  		store.setLatitude(latitude);
  		
  		//get longitude
- 		String longitude = driver.findElement(By.xpath("//meta[@itemprop='longitude']")).getText();
+ 		String longitude = driver.findElement(By.xpath("//meta[@itemprop='longitude']")).getAttribute("content");
  		if(longitude == null && longitude.isEmpty()) longitude = "";
  		store.setLongitude(longitude);
  		
  		//get micro-timesopen
  		String timesopen;
- 		try{
- 			timesopen = driver.findElement(By.xpath("//div[@class='micro-timesopen']//span[3]")).getText();
- 			
- 		}
- 		catch (Exception e)
- 		{
- 		timesopen = driver.findElement(By.xpath("//div[@class='micro-timesopen']//span[2]")).getText();
- 		}
- 		if(timesopen == null && timesopen.isEmpty()) timesopen = "";
- 		System.out.println("TIME"+timesopen);
- 		store.setStore_business_hours(timesopen);
- 				
- 		//get image
-// 		String image = driver.findElement(By.xpath("//div[@class='main-image']//div//a//img")).getAttribute("src");
-// 		if(image == null && image.isEmpty()) image = "";
-// 		store.setImage(image);           		
+		try {
+			timesopen = driver.findElement(By.xpath("//div[@class='micro-timesopen']//span[3]")).getText();
 
+		} catch (Exception e) {
+			timesopen = driver.findElement(By.xpath("//div[@class='micro-timesopen']//span[2]")).getText();
+		}
+		if (timesopen == null && timesopen.isEmpty())
+			timesopen = "";
+		// System.out.println("TIME"+timesopen);
+		store.setStore_business_hours(timesopen);
+ 				
+ 		//get store_regular_holiday
+ 		String regular_holiday;
+		try {
+			regular_holiday = driver.findElement(By.xpath("//div[@class='new-detail-info-area'][5]//div[2]")).getText();
+			if (regular_holiday == null && regular_holiday.isEmpty())
+				regular_holiday = "";
+			store.setStore_regular_holiday(regular_holiday);
+		} catch (Exception e) {
+			regular_holiday = "";
+			store.setStore_regular_holiday(regular_holiday);
+		}
+ 
+ 		//get seat
+		String seat;
+		try {
+			seat = driver.findElement(By.xpath("//div[@class='new-detail-info-area'][7]//div[2]")).getText();
+			if (seat == null && seat.isEmpty())
+				seat = "";
+			store.setStore_seat(seat);
+		} catch (Exception e) {
+			seat = "";
+			store.setStore_seat(seat);
+		}
+
+		// get parking_lot
+		String car_parking_lot;
+		String bike_parking_lot;
+		String parking_lot;
+		try {
+			driver.findElement(By.xpath("//div[@class='microsite-box-content']//ul//li[@class='none']//img[@src='//static.foody.vn/s1/style/images/catico/facilities/2/chodauxehoi.png']"));
+			car_parking_lot = "";
+		} catch (Exception e) {
+			car_parking_lot = "Có chỗ để ô tô";
+		}
+		try {
+
+			driver.findElement(By.xpath("//div[@class='microsite-box-content']//ul//li[@class='none']//img[@src='//static.foody.vn/s1/style/images/catico/facilities/2/giuxemienphi.png']"));
+			bike_parking_lot = "";
+		} catch (Exception e) {
+			bike_parking_lot = "Giữ xe máy miễn phí";
+		}
+		parking_lot = car_parking_lot + " - " + bike_parking_lot;
+		store.setStore_parking_lot(parking_lot);
+
+		// get kids room
+		String kids_room;
+		try {
+			driver.findElement(By.xpath("//div[@class='microsite-box-content']//ul//li[@class='none']//img[@src='//static.foody.vn/s1/style/images/catico/facilities/2/vuichoitreem.png']"));
+			kids_room = "";
+		} catch (Exception e) {
+			kids_room = "Có chỗ chơi cho trẻ em";
+		}
+		store.setStore_kids_room(kids_room); 
 		
 		//get phone                    		
 		WebElement btnClickPhone = driver.findElement(By.id("show-phone-number"));
 		btnClickPhone.click();
 		Thread.sleep(2000);
-		String phone = driver.findElement(By.xpath("//div[@class='microsite-popup-phone-number']//table")).getText();  
-		phone=phone.replaceAll("\\r\\n|\\r|\\n", " - ");
-		//System.out.println("PHONE: " + phone);
-		if(phone == null && phone.isEmpty()) phone = "";
-		store.setStore_phone_no(phone);
+		String phone;
+		try{
+			phone = driver.findElement(By.xpath("//div[@class='microsite-popup-phone-number']//table")).getText(); 
+			phone=phone.replaceAll("\\r\\n|\\r|\\n", " - ");
+			if(phone == null && phone.isEmpty()) 
+				phone = "";
+			store.setStore_phone_no(phone);
+		}
+		catch(Exception e){
+			phone = "";
+			store.setStore_phone_no(phone);
+		}
 		//set store id
 		store.setStore_code(convertCode(row));
 		System.out.print("Done:" + row);
@@ -198,17 +253,17 @@ public class Information extends Thread {
 			sb.append(store.getStore_prefectures());
 		sb.append(COMMA_DELIMITER);
 		//Địa chỉ
-				if(store.getStore_building() == null && store.getStore_building().isEmpty())
-					sb.append("");
-				else
-					sb.append(store.getStore_building());
-				sb.append(";");
+		if(store.getStore_building() == null && store.getStore_building().isEmpty())
+			sb.append("");
+		else
+			sb.append(store.getStore_building());
+		
+		sb.append(COMMA_DELIMITER);
+		//Tòa nhà
 		if(store.getStore_address() == null && store.getStore_address().isEmpty())
 			sb.append("");
 		else
 			sb.append(store.getStore_address());
-		sb.append(COMMA_DELIMITER);
-		//Tòa nhà
 		sb.append(COMMA_DELIMITER);
 		
 		//Vĩ độ
@@ -248,16 +303,28 @@ public class Information extends Thread {
 			sb.append(store.getStore_business_hours());	
 		sb.append(COMMA_DELIMITER);		
 		//Ngày nghỉ
-		sb.append("");
+		if(store.getStore_regular_holiday() == null && store.getStore_regular_holiday().isEmpty())
+			sb.append("");
+		else 
+			sb.append(store.getStore_regular_holiday());
 		sb.append(COMMA_DELIMITER);
 		//Thông tin đỗ xe
-		sb.append("");	
+		if(store.getStore_parking_lot() == null && store.getStore_parking_lot().isEmpty())
+			sb.append("");
+		else 
+			sb.append(store.getStore_parking_lot());
 		sb.append(COMMA_DELIMITER);
 		//Thông tin chỗ ngồi
-		sb.append("");	
+		if(store.getStore_seat() == null && store.getStore_seat().isEmpty())
+			sb.append("");
+		else 
+			sb.append(store.getStore_seat());
 		sb.append(COMMA_DELIMITER);
 		//Phòng của trẻ nhỏ
-		sb.append("");
+		if(store.getStore_kids_room() == null && store.getStore_kids_room().isEmpty())
+			sb.append("");
+		else 
+			sb.append(store.getStore_kids_room());
 		sb.append(COMMA_DELIMITER);
 		//Địa chỉ email
 		sb.append("");	
