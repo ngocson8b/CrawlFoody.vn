@@ -48,9 +48,9 @@ public class Constants {
 	public static String[] CAT_LIST_HN = {
 //				"nha-hang@84@1",
 //			  "sang-trong@7@12" -- done
-			  "buffet@7@39"
-//			  ,"an-vat-via-he@84@11"
-//			  ,"an-chay@7@56"
+//			  "buffet@7@39"
+//			   "an-chay@7@56"
+			  "an-vat-via-he@84@11"
 //			  ,"cafe@84@2"
 //			  ,"quan-an@84@3"
 //			  ,"bar-pub@20@4"

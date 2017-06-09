@@ -29,11 +29,12 @@ public class Information extends Thread {
 	
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
-	public int row = 1;
-	public int page = 1;
+	public int row = 113;
+	public int page = 4;
 			
 	//CSV file header
 	private static final String FILE_HEADER = "Mã thương hiệu,Mã cửa hàng,Tên cửa hàng,Trạng thái,Mã bưu chính,Tỉnh/Thành phố,Địa chỉ,Tòa nhà,Vĩ độ,Kinh độ,Phạm vi check in,Truy cập,Số điện thoại,FAX,Tên quản lý cửa hàng,Thời gian hoạt động,Ngày nghỉ,Thông tin đỗ xe,Thông tin chỗ ngồi,Phòng của trẻ nhỏ,Địa chỉ email,Điều khoản sử dụng,Chính sách bảo mật,Freeword,SEO từ khóa 1,SEO từ khóa 2,SEO từ khóa 3";
+	private static final String FILE_IMAGE_HEADER = "Mã cửa hàng,Link ảnh";
 	//final static Logger logger = Logger.getLogger(CrawlerLinksGetter.class);
 	public void getInfo(String pLinkPath, String pInfoPath, String pCode, String pItemName) throws IOException, InterruptedException{
 		String fileInputPath = pLinkPath + pCode + "_" + pItemName.toLowerCase() + ".txt" ;
@@ -44,14 +45,19 @@ public class Information extends Thread {
 	    	  infoPath.mkdirs();
 	      }
         File fileOutputPath = new File(pInfoPath + pCode + "_" + pItemName.toLowerCase() + "_" + page + ".csv");
+        File fileImageOutputPath = new File(pInfoPath + pCode + "_" + pItemName.toLowerCase() + "_" + page + "_image.csv");
         System.out.println(fileOutputPath);
 		// PrintWriter pw = new PrintWriter(fileOutputPath,"UTF-8");
 		FileWriter pw = new FileWriter(fileOutputPath,true); 
+		FileWriter pwImage = new FileWriter(fileImageOutputPath,true);
 
 //		Write the CSV file header
 		pw.write(FILE_HEADER.toString());
+		pwImage.write(FILE_IMAGE_HEADER.toString());
+
 //		Add a new line separator after the header
 		pw.write(NEW_LINE_SEPARATOR.toString());
+		pwImage.write(NEW_LINE_SEPARATOR.toString());
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(fileReader));
 		String link;
@@ -68,16 +74,23 @@ public class Information extends Thread {
             		if(row%50==0){
             			page++;
             			fileOutputPath = new File(pInfoPath + pCode + "_" + pItemName.toLowerCase() + "_" + page + ".csv");
+            			fileImageOutputPath = new File(pInfoPath + pCode + "_" + pItemName.toLowerCase() + "_" + page + "_image.csv");
+            			
             			pw = new FileWriter(fileOutputPath,true); 
+            			pwImage = new FileWriter(fileImageOutputPath,true); 
 
 //            			Write the CSV file header
             			pw.write(FILE_HEADER.toString());
+            			pwImage.write(FILE_IMAGE_HEADER.toString());
 //            			Add a new line separator after the header
             			pw.write(NEW_LINE_SEPARATOR.toString());
+            			pwImage.write(NEW_LINE_SEPARATOR.toString());
             			
             		}
-            		pw.write(writeToBuilder(store).toString());           		
+            		pw.write(writeToBuilder(store).toString());  
+            		pwImage.write(writeImage(store).toString()); 
             		pw.flush();
+            		pwImage.flush();
             		driver.close();
             		Thread.sleep(5000);
             }
@@ -102,17 +115,19 @@ public class Information extends Thread {
 		 Thread.sleep(2000);	
 	}
 	
+	
 	public Store execData(WebDriver driver, int row) throws InterruptedException{
 		Store store = new Store();
 		//main-info-title
  		String title = driver.findElement(By.xpath("//div[@class='main-info-title']//h1")).getText();
  		if(title == null && title.isEmpty()) title = "";
+ 		else title = title.replaceAll(",", "-");
  		store.setStore_name(title);
  		
  		//get streetAddress
  		String streetAddress = driver.findElement(By.xpath("//span[@itemprop='streetAddress']")).getText();
  		if(streetAddress == null && streetAddress.isEmpty()) streetAddress = "";
- 		else streetAddress = streetAddress.replaceAll(",", ";");
+ 		else streetAddress = streetAddress.replaceAll(",", "-");
  		store.setStore_building(streetAddress);
  		
  		//get addressLocality
@@ -164,8 +179,10 @@ public class Information extends Thread {
 		String seat;
 		try {
 			seat = driver.findElement(By.xpath("//div[@class='new-detail-info-area'][7]//div[2]")).getText();
-			if (seat == null && seat.isEmpty())
-				seat = "";
+			if (seat == null && seat.isEmpty()) seat = "";
+			else {
+				 seat = seat.replaceAll(",", "-");	
+			}
 			store.setStore_seat(seat);
 		} catch (Exception e) {
 			seat = "";
@@ -202,27 +219,60 @@ public class Information extends Thread {
 		}
 		store.setStore_kids_room(kids_room); 
 		
+		//get image
+		String image;
+		try{
+			image = driver.findElement(By.xpath("//div[@class='main-image']//div//a//img")).getAttribute("src");
+	 		if(image == null && image.isEmpty()) image = "";
+	 		store.setImage(image);     
+		} catch (Exception e){
+			image = "";
+	 		store.setImage(image);     
+		}
+ 		
 		//get phone                    		
 		WebElement btnClickPhone = driver.findElement(By.id("show-phone-number"));
 		btnClickPhone.click();
 		Thread.sleep(2000);
-		String phone;
+		String phone = "";
 		try{
-			phone = driver.findElement(By.xpath("//div[@class='microsite-popup-phone-number']//table")).getText(); 
-			phone=phone.replaceAll("\\r\\n|\\r|\\n", " - ");
-			if(phone == null && phone.isEmpty()) 
+			phone = driver.findElement(By.xpath("//div[@class='microsite-popup-phone-number']//table//tbody//tr//td[2]")).getText();
+			try{
+//				phone=phone.replaceAll("\\r\\n|\\r|\\n", " - ");	
+				phone = phone.replaceAll("[()]","");
+				phone = phone.replaceAll(" ","");
+//				if(phone == null && phone.isEmpty()) 
+//					phone = "";
+				
+			} catch(Exception e2){
 				phone = "";
-			store.setStore_phone_no(phone);
-		}
-		catch(Exception e){
-			phone = "";
-			store.setStore_phone_no(phone);
-		}
+			}
+		} catch(Exception e){}
+		store.setStore_phone_no(phone);
+		
 		//set store id
 		store.setStore_code(convertCode(row));
 		System.out.print("Done:" + row);
 		return store;
 	}
+	
+	public StringBuilder writeImage(Store store){
+		StringBuilder sb = new StringBuilder();
+		// Mã cửa hàng
+		if(store.getStore_code() == null && store.getStore_code().isEmpty())
+			sb.append("");
+		else
+			sb.append(store.getStore_code());
+		sb.append(COMMA_DELIMITER);
+		// Image
+		if(store.getImage() == null && store.getImage().isEmpty())
+			sb.append("");
+		else
+			sb.append(store.getImage());
+		sb.append(NEW_LINE_SEPARATOR);
+		return sb;
+	}
+	
 	public StringBuilder writeToBuilder(Store store){
 		StringBuilder sb = new StringBuilder();
 		//Mã thương hiệu
@@ -253,17 +303,17 @@ public class Information extends Thread {
 			sb.append(store.getStore_prefectures());
 		sb.append(COMMA_DELIMITER);
 		//Địa chỉ
+		if(store.getStore_address() == null && store.getStore_address().isEmpty())
+			sb.append("");
+		else
+			sb.append(store.getStore_address());
+		sb.append(COMMA_DELIMITER);
+		//Tòa nhà
 		if(store.getStore_building() == null && store.getStore_building().isEmpty())
 			sb.append("");
 		else
 			sb.append(store.getStore_building());
 		
-		sb.append(COMMA_DELIMITER);
-		//Tòa nhà
-		if(store.getStore_address() == null && store.getStore_address().isEmpty())
-			sb.append("");
-		else
-			sb.append(store.getStore_address());
 		sb.append(COMMA_DELIMITER);
 		
 		//Vĩ độ
