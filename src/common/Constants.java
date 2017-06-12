@@ -46,16 +46,16 @@ public class Constants {
 	
 	
 	public static String[] CAT_LIST_HN = {
-//				"nha-hang@84@1",
-//			  "sang-trong@7@12" -- done
-//			  "buffet@7@39"
-//			   "an-chay@7@56"
-			  "an-vat-via-he@84@11"
+	//			"nha-hang@84@1", --done
+//			  "sang-trong@7@12"  --done
+		//	  ,"buffet@7@39" --done
+//			   "an-chay@7@56" --done
+			 // "an-vat-via-he@84@11" --done
 //			  ,"cafe@84@2"
-//			  ,"quan-an@84@3"
-//			  ,"bar-pub@20@4"
-//			  ,"quan-nhau@84@54"
-//			  ,"beer-club@6@43"
+		//	  "quan-an@84@3"  --done
+		//	  ,"bar-pub@20@4" -- done
+			  "quan-nhau@84@54"
+//			  ,"beer-club@6@43" -- done
 //			  ,"tiem-banh@63@6"
 //			  ,"shop-online@81@27"
 //			  ,"giao-com-van-phong@5@28"

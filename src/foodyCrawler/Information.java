@@ -29,8 +29,8 @@ public class Information extends Thread {
 	
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
-	public int row = 113;
-	public int page = 4;
+	public int row = 74;
+	public int page = 3;
 			
 	//CSV file header
 	private static final String FILE_HEADER = "Mã thương hiệu,Mã cửa hàng,Tên cửa hàng,Trạng thái,Mã bưu chính,Tỉnh/Thành phố,Địa chỉ,Tòa nhà,Vĩ độ,Kinh độ,Phạm vi check in,Truy cập,Số điện thoại,FAX,Tên quản lý cửa hàng,Thời gian hoạt động,Ngày nghỉ,Thông tin đỗ xe,Thông tin chỗ ngồi,Phòng của trẻ nhỏ,Địa chỉ email,Điều khoản sử dụng,Chính sách bảo mật,Freeword,SEO từ khóa 1,SEO từ khóa 2,SEO từ khóa 3";
@@ -101,7 +101,11 @@ public class Information extends Thread {
 	
 	public void login(WebDriver driver) throws InterruptedException {
 		Thread.sleep(5000);
-		driver.findElement(By.xpath("//div[@id='catfish-banner']//div//span")).click();
+		try{
+			driver.findElement(By.xpath("//div[@id='catfish-banner']//div//span")).click();
+		} catch (Exception e) {
+			
+		}
 		driver.findElement(By.linkText("Đăng nhập")).click();
 		WebElement email = driver.findElement(By.id("Email"));
 		email.sendKeys("maipl_tt@runsystem.net");            		  
